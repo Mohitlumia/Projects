@@ -11,6 +11,7 @@ import glob
 # storing scratch area collected over time
 path = "scratch_images/*.*"
 scratch_area_data = []
+
 #%%
 for image_path in glob.glob(path):
     img = io.imread(image_path)
@@ -23,4 +24,7 @@ for image_path in glob.glob(path):
     scratch_area_percentage = (np.sum(segmented_img == False)/segmented_img.size)*100
     scratch_area_data.append(scratch_area_percentage)
 #%%
-print(scratch_area_data)
+# lets plot the result
+time_data = [i for i in range(len(scratch_area_data))]
+plt.plot(time_data,scratch_area_data,'-o')
+plt.show()

@@ -6,18 +6,21 @@ from skimage.morphology import disk
 from skimage.filters.rank import entropy
 from skimage.filters import threshold_otsu
 import numpy as np
+import glob
 #%%
-path = "scratch_images/Scratch0.jpg"
-img = io.imread(path)
-# applying entropy to segment based to texture
-entropy_img = entropy(img,disk(10))
+# storing scratch area collected over time
+path = "scratch_images/*.*"
+scratch_area_data = []
 #%%
-# get threshold value and create a binary segmented image
-threshold_val = threshold_otsu(entropy_img)
-segmented_img = entropy_img > threshold_val
+for image_path in glob.glob(path):
+    img = io.imread(image_path)
+    # applying entropy to segment based to texture
+    entropy_img = entropy(img,disk(10))
+    # get threshold value and create a binary segmented image
+    threshold_val = threshold_otsu(entropy_img)
+    segmented_img = entropy_img > threshold_val
+    # quantify the scratch area and print
+    scratch_area_percentage = (np.sum(segmented_img == False)/segmented_img.size)*100
+    scratch_area_data.append(scratch_area_percentage)
 #%%
-# quantify the scratch area and print
-scratch_area_percentage = (np.sum(segmented_img == False)/segmented_img.size)*100
-print(scratch_area_percentage)
-#%%
-plt.imshow(segmented_img,cmap="gray")
+print(scratch_area_data)

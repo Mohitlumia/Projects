@@ -39,5 +39,9 @@ from scipy.stats import linregress
 slop, intercept, *rest = linregress(time_data, scratch_area_data)
 
 plt.plot(time_data,scratch_area_data,'bo')
-plt.plot(time_data, (slop*time_data)+ intercept)
+plt.plot(time_data, (slop*time_data)+ intercept,label=f'y = {round(slop,2)}x + {round(intercept,2)}')
+plt.xlabel('Days')
+plt.ylabel('Scratch Area')
+plt.title("Scratch Analysis")
+plt.legend()  
 plt.show()

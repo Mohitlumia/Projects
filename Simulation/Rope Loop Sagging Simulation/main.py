@@ -1,5 +1,6 @@
 import pygame
 from objects.loop_rope import Loop_Rope
+from objects.circle_obstacle import Circle_obstacle
 
 def main():
 
@@ -11,23 +12,20 @@ def main():
     # Create a Loop_Rope instance
     loop_rope = Loop_Rope(400, 300, 100, 50)
 
+    # Create a CircleObstacle instance
+    circle_obstacles = Circle_obstacle(400, 300, 50)
+
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        for roop_element in loop_rope.elements:
-            if roop_element.pos[1] > 600:
-                roop_element.vy *= -0.7  # simple bounce effect
-                roop_element.pos[1] = 600
-            roop_element.vy += 0.1*9.81  # gravity
-            roop_element.pos[0] += roop_element.vx
-            roop_element.pos[1] += roop_element.vy
-
         screen.fill((255, 255, 255))  # Clear the screen with white
-        loop_rope.update()
+        loop_rope.apply_forces()
+        loop_rope.update(circle=circle_obstacles)
         loop_rope.draw(screen)
+        circle_obstacles.draw(screen)
         pygame.display.flip()
         clock.tick(60)  # Limit to 60 frames per second
 

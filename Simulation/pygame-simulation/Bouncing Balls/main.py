@@ -1,6 +1,6 @@
 import pygame
 from objects.circles import Circles
-import random
+from functions.random_circles import random_circles
 
 
 def main():
@@ -14,22 +14,9 @@ def main():
     Circles.width = width
     Circles.height = height
 
-    circles_lis = []
-    for _ in range(50): # Create 50 circles with random attributes
-        r = random.randint(10, 30)
-        x = random.randint(r, width - r)
-        y = random.randint(r, height - r)
-        vx = random.uniform(-4, 4)
-        vy = random.uniform(-4, 4)
-        color = (
-            random.randint(50, 255),
-            random.randint(50, 255),
-            random.randint(50, 255),
-        )
-
-        circles_lis.append(Circles(x, y, r, color, vx, vy))
-
-
+    # Generate random circles
+    circles = random_circles(10, width, height)
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -37,11 +24,15 @@ def main():
                 running = False
 
         screen.fill((255, 255, 255))  # Clear the screen with white
-        for circle in circles_lis:    # Draw and update each circle
-            circle.update()
-            circle.draw(screen)
+        for i in range(len(circles)):  # Check collisions between circles
+            circles[i].update()
+            circles[i].draw(screen)
+            for j in range(i+1, len(circles)):
+                # Draw and update each circle
+                circles[i].update(circles[j])
+                circles[j].update()
         pygame.display.flip()
-        clock.tick(60)  # Limit to 60 frames per second
+        clock.tick(120)  # Limit to 60 frames per second
 
     pygame.quit()
 

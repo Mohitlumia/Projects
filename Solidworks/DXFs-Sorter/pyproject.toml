@@ -1,0 +1,13 @@
+[project]
+name = "dxf_sorter"
+version = "0.1.0"
+description = "Automation tool to segregate DXF files based on thickness"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "openpyxl"
+]
+
+[project.scripts]
+dxf-sort = "dxf_sorter.cli:main"

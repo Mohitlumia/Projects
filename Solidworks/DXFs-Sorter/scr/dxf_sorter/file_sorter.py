@@ -1,18 +1,14 @@
 import os
 import shutil
+from dxf_to_png import save_dxf_as_png
 
-def segregate_dxf_files(dxf_folder, mapping, output_folder="output"):
-    os.makedirs(output_folder, exist_ok=True)
+def segregate_dxf_files(file_name, thk, dxf_folder, output_folder):
 
-    for file in os.listdir(dxf_folder):
+    dest_path = os.path.join(output_folder, f"{thk}mm")
+    os.makedirs(dest_path, exist_ok=True)
 
-        file_name, _ = os.path.splitext(file)
-        if file.endswith(".dxf") and file_name in mapping:
-            thk = str(mapping[file_name])
-            dest_path = os.path.join(output_folder, f"{thk}mm")
-            os.makedirs(dest_path, exist_ok=True)
+    shutil.copy(
+        os.path.join(dxf_folder, f"{file_name}.dxf"),
+        os.path.join(dest_path, f"{file_name}.dxf")
+    )
 
-            shutil.copy(
-                os.path.join(dxf_folder, file),
-                os.path.join(dest_path, file)
-            )

@@ -2,13 +2,31 @@
 from PIL import Image
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as XLImage
+import os
+import pandas as pd
+
+def get_row_number_by_name(png_name):
+
+    # Load Excel file
+    df = pd.read_excel("D:\Solidworks\HM mounting\HM Mounting BOM pngs.xlsx")
+
+    # Find rows where the column contains the string
+    matches = df[df["PART NUMBER"] == png_name]
+
+    if not matches.empty:
+        # pandas index is 0-based; Excel rows are 1-based (+ header row)
+        excel_row_number = matches.index[0] + 2
+        print(excel_row_number)
+        return excel_row_number
+    else:
+        print("String not found")
 
 
-def insert_png_to_excel(png_path, counter):
+def insert_png_to_excel(png_path):
     # ---------- CONFIG ----------
     img_path = png_path
-    target_column = "H"
-    target_row = counter
+    target_column = "I"  # Column to insert image into
+    target_row = get_row_number_by_name(png_name=os.path.splitext(os.path.basename(png_path))[0])
 
     # Set desired cell dimensions
     cell_width_pixels = 150   # width in pixels
@@ -21,7 +39,7 @@ def insert_png_to_excel(png_path, counter):
     # 1 Excel row height = pixel_height * 0.75
     row_height = cell_height_pixels * 0.75
 
-    wb = load_workbook("example\DXFs List.xlsx")
+    wb = load_workbook("D:\Solidworks\HM mounting\HM Mounting BOM pngs.xlsx")
     ws = wb.active
 
     # Apply cell dimensions
@@ -46,5 +64,5 @@ def insert_png_to_excel(png_path, counter):
     xl_img = XLImage(resized_img_path)
     ws.add_image(xl_img, f"{target_column}{target_row}")
 
-    wb.save("example\DXFs List.xlsx")
+    wb.save("D:\Solidworks\HM mounting\HM Mounting BOM pngs.xlsx")
     print("Saved as result.xlsx")
